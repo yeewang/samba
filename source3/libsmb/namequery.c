@@ -3134,12 +3134,18 @@ static NTSTATUS get_dc_list(const char *domain,
 	saf_servername = saf_fetch(ctx, domain);
 
 	if (strequal(domain, lp_workgroup()) || strequal(domain, lp_realm())) {
+		// pserver = talloc_asprintf(ctx, "%s, %s",
+		//	saf_servername ? saf_servername : "",
+		//	lp_password_server());
 		pserver = talloc_asprintf(ctx, "%s, %s",
-			saf_servername ? saf_servername : "",
-			lp_password_server());
-	} else {
-		pserver = talloc_asprintf(ctx, "%s, *",
+			lp_password_server(),
 			saf_servername ? saf_servername : "");
+	} else {
+		// pserver = talloc_asprintf(ctx, "%s, *",
+		// 	saf_servername ? saf_servername : "");
+		pserver = talloc_asprintf(ctx, "%s, %s, *",
+			lp_password_server(),
+ 			saf_servername ? saf_servername : "");
 	}
 
 	TALLOC_FREE(saf_servername);
